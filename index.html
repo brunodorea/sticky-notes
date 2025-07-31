@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📝 Sticky Notes</title>
+    <script defer src="script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-TJQ2XJZPTD'></script>
+    <script>
+        window.dataLayer = window.dataLayer || []
+        function gtag() { dataLayer.push(arguments) }
+        gtag('js', new Date())
+        gtag('config', 'G-TJQ2XJZPTD')
+    </script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
+    <div class="mb-4 flex gap-4">
+        <button id="addNote" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded">
+            Adicionar notas
+        </button>
+        <button id="clearNotes" class="bg-red-400 hover:bg-red-300 text-white font-bold py-2 px-4 rounded">
+            Limpar anotações
+        </button>
+    </div>
+
+    <div id="board" class="relative w-full  h-[80vh] bg-white border border-gray-300 rounded shadow overflow-hidden">
+    </div>
+
+</body>
+
+</html>
