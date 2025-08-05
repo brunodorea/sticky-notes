@@ -11,6 +11,7 @@
 - **Remover notas:** Feche e remova notas individualmente.
 - **Personalizar cores:** Escolha a cor de cada nota através de uma paleta.
 - **Alternar tema:** Troque entre modo claro e escuro com um botão dedicado.
+- **Scroll customizado:** Scrollbar das notas é minimalista e adapta-se ao tema.
 - **Persistência de dados:** As notas são salvas automaticamente no navegador e permanecem após recarregar a página.
 
  ## Tecnologias Utilizadas

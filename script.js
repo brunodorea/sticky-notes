@@ -58,7 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         const content = document.createElement('div')
-        content.className = 'content p-2 flex-1 text-sm overflow-auto focus:outline-none'
+        content.className = `
+          content p-2 flex-1 text-sm overflow-y-auto focus:outline-none
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-gray-100
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-gray-300
+          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+        `.replace(/\s+/g, ' ')
         content.contentEditable = true
         content.addEventListener('input', () => {
             saveNotes()
@@ -80,12 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
         note.style.top = `${posY}px`
 
         const resizeHandle = document.createElement('div')
-        resizeHandle.className = 'absolute bottom-1 right-1 w-5 h-5 cursor-nwse-resize flex items-center justify-center z-20'
+        resizeHandle.className = 'absolute bottom-1 right-1 mb-2 mr-2 w-5 h-5 cursor-nwse-resize flex items-center justify-center z-20'
         resizeHandle.title = 'Redimensionar'
         resizeHandle.innerHTML = '<i class="bi bi-arrows-angle-expand text-gray-500 text-lg"></i>'
         note.appendChild(resizeHandle)
 
-        resizeHandle.addEventListener('mousedown', function(e) {
+        resizeHandle.addEventListener('mousedown', function (e) {
             e.stopPropagation()
             e.preventDefault()
             const startX = e.clientX
@@ -244,7 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
             header.appendChild(closeBtn)
 
             const content = document.createElement('div')
-            content.className = 'content p-2 flex-1 text-sm overflow-auto focus:outline-none'
+            content.className = `
+                content p-2 flex-1 text-sm overflow-y-auto focus:outline-none
+                [&::-webkit-scrollbar]:w-2
+                [&::-webkit-scrollbar-track]:rounded-full
+                [&::-webkit-scrollbar-track]:bg-gray-100
+                [&::-webkit-scrollbar-thumb]:rounded-full
+                [&::-webkit-scrollbar-thumb]:bg-gray-300
+                dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+            `.replace(/\s+/g, ' ')
             content.contentEditable = true
             content.innerText = noteData.content
             content.addEventListener('input', () => {
@@ -256,12 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
             note.style.height = (noteData.height || 160) + 'px'
 
             const resizeHandle = document.createElement('div')
-            resizeHandle.className = 'absolute bottom-1 right-1 w-5 h-5 cursor-nwse-resize flex items-center justify-center z-20'
+            resizeHandle.className = 'absolute bottom-1 right-1 mb-2 mr-2 w-5 h-5 cursor-nwse-resize flex items-center justify-center z-20'
             resizeHandle.title = 'Redimensionar'
             resizeHandle.innerHTML = '<i class="bi bi-arrows-angle-expand text-gray-500 text-lg"></i>'
             note.appendChild(resizeHandle)
 
-            resizeHandle.addEventListener('mousedown', function(e) {
+            resizeHandle.addEventListener('mousedown', function (e) {
                 e.stopPropagation()
                 e.preventDefault()
                 const startX = e.clientX
