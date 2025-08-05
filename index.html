@@ -7,6 +7,7 @@
     <title>📝 Sticky Notes</title>
     <script defer src="script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script async src='https://www.googletagmanager.com/gtag/js?id=G-TJQ2XJZPTD'></script>
     <script>
         window.dataLayer = window.dataLayer || []
@@ -17,18 +18,24 @@
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
-    <div class="mb-4 flex gap-4">
-        <button id="addNote" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded">
-            Adicionar notas
-        </button>
-        <button id="clearNotes" class="bg-red-400 hover:bg-red-300 text-white font-bold py-2 px-4 rounded">
-            Limpar anotações
+    <div class="mb-4 flex w-full justify-between items-center">
+        <div class="flex gap-4 mx-auto">
+            <button id="addNote" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded">
+                Adicionar notas
+            </button>
+            <button id="clearNotes" class="bg-red-400 hover:bg-red-300 text-white font-bold py-2 px-4 rounded">
+                Limpar anotações
+            </button>
+        </div>
+        <button id="toggleTheme"
+            class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center">
+            <i id="themeIcon" class="bi bi-moon text-xl"></i>
         </button>
     </div>
 
-    <div id="board" class="relative w-full  h-[80vh] bg-white border border-gray-300 rounded shadow overflow-hidden">
+    <div id="board" class="flex-1 w-full mt-2 bg-white border border-gray-300 rounded shadow overflow-hidden relative"
+        style="z-index: 10;">
     </div>
-
 </body>
 
 </html>

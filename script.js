@@ -79,6 +79,45 @@ document.addEventListener('DOMContentLoaded', () => {
         note.style.left = `${posX}px`
         note.style.top = `${posY}px`
 
+        const resizeHandle = document.createElement('div')
+        resizeHandle.className = 'absolute bottom-1 right-1 w-5 h-5 cursor-nwse-resize flex items-center justify-center z-20'
+        resizeHandle.title = 'Redimensionar'
+        resizeHandle.innerHTML = '<i class="bi bi-arrows-angle-expand text-gray-500 text-lg"></i>'
+        note.appendChild(resizeHandle)
+
+        resizeHandle.addEventListener('mousedown', function(e) {
+            e.stopPropagation()
+            e.preventDefault()
+            const startX = e.clientX
+            const startY = e.clientY
+            const startWidth = note.offsetWidth
+            const startHeight = note.offsetHeight
+            const boardRect = board.getBoundingClientRect()
+            const noteRect = note.getBoundingClientRect()
+            note.style.zIndex = 1000
+
+            function onMouseMove(ev) {
+                const boardRect = board.getBoundingClientRect()
+                const noteRect = note.getBoundingClientRect()
+                const maxWidth = boardRect.width - (noteRect.left - boardRect.left)
+                const maxHeight = boardRect.height - (noteRect.top - boardRect.top)
+                const newWidth = Math.max(100, Math.min(maxWidth, startWidth + (ev.clientX - startX)))
+                const newHeight = Math.max(60, Math.min(maxHeight, startHeight + (ev.clientY - startY)))
+                note.style.width = newWidth + 'px'
+                note.style.height = newHeight + 'px'
+            }
+
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove)
+                document.removeEventListener('mouseup', onMouseUp)
+                note.style.zIndex = 2
+                saveNotes()
+            }
+
+            document.addEventListener('mousemove', onMouseMove)
+            document.addEventListener('mouseup', onMouseUp)
+        })
+
         board.appendChild(note)
         saveNotes()
         makeDraggable(note)
@@ -126,7 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = false
             document.removeEventListener('mousemove', onMouseMove)
             document.removeEventListener('mouseup', onMouseUp)
-            element.style.zIndex = 1
+            element.style.zIndex = 2
+            saveNotes()
         }
 
         saveNotes()
@@ -140,8 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const left = parseInt(note.style.left, 10)
             const top = parseInt(note.style.top, 10)
             const color = [...note.classList].find(cls => cls.startsWith('bg-'))
+            const width = note.offsetWidth
+            const height = note.offsetHeight
 
-            notes.push({ content, left, top, color })
+            notes.push({ content, left, top, color, width, height })
         })
 
         localStorage.setItem('postits', JSON.stringify(notes))
@@ -210,6 +252,46 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             note.appendChild(content)
 
+            note.style.width = (noteData.width || 160) + 'px'
+            note.style.height = (noteData.height || 160) + 'px'
+
+            const resizeHandle = document.createElement('div')
+            resizeHandle.className = 'absolute bottom-1 right-1 w-5 h-5 cursor-nwse-resize flex items-center justify-center z-20'
+            resizeHandle.title = 'Redimensionar'
+            resizeHandle.innerHTML = '<i class="bi bi-arrows-angle-expand text-gray-500 text-lg"></i>'
+            note.appendChild(resizeHandle)
+
+            resizeHandle.addEventListener('mousedown', function(e) {
+                e.stopPropagation()
+                e.preventDefault()
+                const startX = e.clientX
+                const startY = e.clientY
+                const startWidth = note.offsetWidth
+                const startHeight = note.offsetHeight
+                const boardRect = board.getBoundingClientRect()
+                const noteRect = note.getBoundingClientRect()
+                note.style.zIndex = 1000
+
+                function onMouseMove(ev) {
+                    const maxWidth = boardRect.width - (noteRect.left - boardRect.left)
+                    const maxHeight = boardRect.height - (noteRect.top - boardRect.top)
+                    const newWidth = Math.max(100, Math.min(maxWidth, startWidth + (ev.clientX - startX)))
+                    const newHeight = Math.max(60, Math.min(maxHeight, startHeight + (ev.clientY - startY)))
+                    note.style.width = newWidth + 'px'
+                    note.style.height = newHeight + 'px'
+                }
+
+                function onMouseUp() {
+                    document.removeEventListener('mousemove', onMouseMove)
+                    document.removeEventListener('mouseup', onMouseUp)
+                    note.style.zIndex = 2
+                    saveNotes()
+                }
+
+                document.addEventListener('mousemove', onMouseMove)
+                document.addEventListener('mouseup', onMouseUp)
+            })
+
             board.appendChild(note)
 
             makeDraggable(note)
@@ -217,4 +299,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadNotes()
+
+    const toggleThemeBtn = document.getElementById('toggleTheme')
+    const body = document.body
+
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            body.classList.remove('bg-gray-100')
+            body.classList.add('bg-gray-900')
+            document.getElementById('board').classList.remove('bg-white')
+            document.getElementById('board').classList.add('bg-gray-800', 'border-gray-700')
+            themeIcon.classList.remove('bi-moon')
+            themeIcon.classList.add('bi-sun')
+        } else {
+            body.classList.remove('bg-gray-900')
+            body.classList.add('bg-gray-100')
+            document.getElementById('board').classList.remove('bg-gray-800', 'border-gray-700')
+            document.getElementById('board').classList.add('bg-white')
+            themeIcon.classList.remove('bi-sun')
+            themeIcon.classList.add('bi-moon')
+        }
+    }
+
+    function getSavedTheme() {
+        return localStorage.getItem('theme') || 'light'
+    }
+
+    toggleThemeBtn.addEventListener('click', () => {
+        const currentTheme = getSavedTheme()
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light'
+        localStorage.setItem('theme', newTheme)
+        applyTheme(newTheme)
+    })
+
+    applyTheme(getSavedTheme())
 })
