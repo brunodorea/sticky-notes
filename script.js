@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         headerPostIt.className = 'h-6 w-full cursor-move relative'
         note.appendChild(headerPostIt)
 
-
-
         const closeBtn = document.createElement('button')
         closeBtn.textContent = '×'
         closeBtn.className = 'absolute top-0 right-0 text-black font-bold w-6 h-6 flex items-center justify-center z-10'
@@ -57,23 +55,40 @@ document.addEventListener('DOMContentLoaded', () => {
             colorMenu.classList.toggle('hidden')
         })
 
-        const content = document.createElement('div')
-        content.className = `
-          content p-2 flex-1 text-sm overflow-y-auto focus:outline-none
-          [&::-webkit-scrollbar]:w-2
-          [&::-webkit-scrollbar-track]:rounded-full
-          [&::-webkit-scrollbar-track]:bg-gray-100
-          [&::-webkit-scrollbar-thumb]:rounded-full
-          [&::-webkit-scrollbar-thumb]:bg-gray-300
-          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
-        `.replace(/\s+/g, ' ')
-        content.contentEditable = true
-        content.addEventListener('input', () => {
+        const contentArea = document.createElement('textarea')
+        contentArea.className = 'content-area p-2 flex-1 text-sm overflow-y-auto focus:outline-none w-full h-full resize-none bg-transparent'
+        contentArea.placeholder = 'Digite em Markdown...'
+
+        const preview = document.createElement('div')
+        preview.className = 'content-preview p-2 flex-1 text-sm overflow-y-auto w-full h-full'
+        preview.style.display = 'none'
+
+        contentArea.addEventListener('input', () => {
+            preview.innerHTML = marked.parse(contentArea.value)
+            styleMarkdownPreview(preview)
             saveNotes()
         })
 
-        note.appendChild(content)
+        contentArea.addEventListener('focus', () => {
+            preview.style.display = 'none'
+            contentArea.style.display = 'block'
+        })
+
+        contentArea.addEventListener('blur', () => {
+            preview.innerHTML = marked.parse(contentArea.value)
+            styleMarkdownPreview(preview)
+            preview.style.display = 'block'
+            contentArea.style.display = 'none'
+        })
+
+        preview.addEventListener('click', () => {
+            preview.style.display = 'none'
+            contentArea.style.display = 'block'
+            contentArea.focus()
+        })
+
+        note.appendChild(contentArea)
+        note.appendChild(preview)
 
         const boardRect = board.getBoundingClientRect()
         const noteWidth = 160
@@ -185,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const notes = []
 
         document.querySelectorAll('.note').forEach(note => {
-            const content = note.querySelector('.content').innerText
+            const content = note.querySelector('.content-area').value
             const left = parseInt(note.style.left, 10)
             const top = parseInt(note.style.top, 10)
             const color = [...note.classList].find(cls => cls.startsWith('bg-'))
@@ -252,23 +267,44 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             header.appendChild(closeBtn)
 
-            const content = document.createElement('div')
-            content.className = `
-                content p-2 flex-1 text-sm overflow-y-auto focus:outline-none
-                [&::-webkit-scrollbar]:w-2
-                [&::-webkit-scrollbar-track]:rounded-full
-                [&::-webkit-scrollbar-track]:bg-gray-100
-                [&::-webkit-scrollbar-thumb]:rounded-full
-                [&::-webkit-scrollbar-thumb]:bg-gray-300
-                dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-                dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
-            `.replace(/\s+/g, ' ')
-            content.contentEditable = true
-            content.innerText = noteData.content
-            content.addEventListener('input', () => {
+            const contentArea = document.createElement('textarea')
+            contentArea.className = 'content-area p-2 flex-1 text-sm overflow-y-auto focus:outline-none w-full h-full resize-none bg-transparent'
+            contentArea.placeholder = 'Digite em Markdown...'
+
+            const preview = document.createElement('div')
+            preview.className = 'content-preview p-2 flex-1 text-sm overflow-y-auto w-full h-full'
+            preview.style.display = 'none'
+
+            contentArea.addEventListener('input', () => {
+                preview.innerHTML = marked.parse(contentArea.value)
+                styleMarkdownPreview(preview)
                 saveNotes()
             })
-            note.appendChild(content)
+
+            contentArea.addEventListener('focus', () => {
+                preview.style.display = 'none'
+                contentArea.style.display = 'block'
+            })
+
+            contentArea.addEventListener('blur', () => {
+                preview.innerHTML = marked.parse(contentArea.value)
+                styleMarkdownPreview(preview)
+                preview.style.display = 'block'
+                contentArea.style.display = 'none'
+            })
+
+            preview.addEventListener('click', () => {
+                preview.style.display = 'none'
+                contentArea.style.display = 'block'
+                contentArea.focus()
+            })
+
+            note.appendChild(contentArea)
+            note.appendChild(preview)
+
+            contentArea.value = noteData.content
+            preview.innerHTML = marked.parse(contentArea.value)
+            styleMarkdownPreview(preview)
 
             note.style.width = (noteData.width || 160) + 'px'
             note.style.height = (noteData.height || 160) + 'px'
@@ -351,4 +387,19 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     applyTheme(getSavedTheme())
+
+    marked.setOptions({
+        gfm: true,
+        breaks: true
+    })
+
+    function styleMarkdownPreview(preview) {
+        preview.querySelectorAll('h1').forEach(el => el.className = 'text-xl font-bold mb-2')
+        preview.querySelectorAll('h2').forEach(el => el.className = 'text-lg font-semibold mb-1')
+        preview.querySelectorAll('h3').forEach(el => el.className = 'text-base font-semibold mb-1')
+        preview.querySelectorAll('p').forEach(el => el.className = 'mb-2')
+        preview.querySelectorAll('ul').forEach(el => el.className = 'list-disc ml-4 mb-2')
+        preview.querySelectorAll('ol').forEach(el => el.className = 'list-decimal ml-4 mb-2')
+        preview.querySelectorAll('a').forEach(el => el.className = 'text-blue-600 underline')
+    }
 })
