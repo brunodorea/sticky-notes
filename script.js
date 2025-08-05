@@ -56,11 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         const contentArea = document.createElement('textarea')
-        contentArea.className = 'content-area p-2 flex-1 text-sm overflow-y-auto focus:outline-none w-full h-full resize-none bg-transparent'
+        contentArea.className = 'content-area p-2 flex-1 text-sm overflow-y-auto focus:outline-none w-full h-full resize-none bg-transparent [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500'
         contentArea.placeholder = 'Digite em Markdown...'
 
         const preview = document.createElement('div')
-        preview.className = 'content-preview p-2 flex-1 text-sm overflow-y-auto w-full h-full'
+        preview.className = 'content-preview p-2 flex-1 text-sm overflow-y-auto w-full h-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500'
         preview.style.display = 'none'
 
         contentArea.addEventListener('input', () => {
@@ -268,12 +268,13 @@ document.addEventListener('DOMContentLoaded', () => {
             header.appendChild(closeBtn)
 
             const contentArea = document.createElement('textarea')
-            contentArea.className = 'content-area p-2 flex-1 text-sm overflow-y-auto focus:outline-none w-full h-full resize-none bg-transparent'
+            contentArea.className = 'content-area p-2 flex-1 text-sm overflow-y-auto focus:outline-none w-full h-full resize-none bg-transparent [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500'
             contentArea.placeholder = 'Digite em Markdown...'
 
             const preview = document.createElement('div')
-            preview.className = 'content-preview p-2 flex-1 text-sm overflow-y-auto w-full h-full'
-            preview.style.display = 'none'
+            preview.className = 'content-preview p-2 flex-1 text-sm overflow-y-auto w-full h-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500'
+            contentArea.style.display = 'none'
+            preview.style.display = 'block'
 
             contentArea.addEventListener('input', () => {
                 preview.innerHTML = marked.parse(contentArea.value)
